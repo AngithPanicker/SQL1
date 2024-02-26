@@ -1,0 +1,125 @@
+mysql> CREATE DATABASE program_I ;
+Query OK, 1 row affected (0.14 sec)
+
+mysql> use program_I ;
+
+Database changed
+mysql> CREATE TABLE DEPARTMENT (dept_id INT PRIMARY KEY,dept_name VARCHAR(255));
+
+Query OK, 0 rows affected (1.07 sec)
+
+mysql> CREATE TABLE EMPLOYEES (emp_id INT PRIMARY KEY,emp_name VARCHAR(255),dept_id INT,salary DECIMAL(10, 2),FOREIGN KEY(dept_id) REFERENCES DEPARTMENT(dept_id));
+
+Query OK, 0 rows affected (0.67 sec)
+
+mysql> INSERT INTO DEPARTMENT (dept_id, dept_name) VALUES(1, 'HR'),(2, 'Finance'),(3, 'IT');
+
+Query OK, 3 rows affected (0.27 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO EMPLOYEES VALUES(101, 'John Doe', 1, 50000.00);
+
+Query OK, 1 row affected (0.12 sec)
+
+
+mysql> INSERT INTO EMPLOYEES VALUES(102, 'Jane Smith', 1, 55000.00);
+
+Query OK, 1 row affected (0.13 sec)
+
+mysql> INSERT INTO EMPLOYEES VALUES(103, 'Mike Johnson', 2, 60000.00);
+
+Query OK, 1 row affected (0.12 sec)
+
+mysql> INSERT INTO EMPLOYEES VALUES(104, 'Emily Brown', 3, 70000.00);
+
+Query OK, 1 row affected (0.12 sec)
+
+mysql> INSERT INTO EMPLOYEES VALUES(105, 'David Lee', 3, 65000.00);
+
+Query OK, 1 row affected (0.09 sec)
+
+mysql> INSERT INTO EMPLOYEES VALUES(106, 'Sarah Clark', 2, 58000.00);
+
+Query OK, 1 row affected (0.13 sec)
+
+
+mysql> select *from EMPLOYEES;
++--------+--------------+---------+----------+
+| emp_id | emp_name     | dept_id | salary   |
++--------+--------------+---------+----------+
+|    101 | John Doe     |       1 | 50000.00 |
+|    102 | Jane Smith   |       1 | 55000.00 |
+|    103 | Mike Johnson |       2 | 60000.00 |
+|    104 | Emily Brown  |       3 | 70000.00 |
+|    105 | David Lee    |       3 | 65000.00 |
+|    106 | Sarah Clark  |       2 | 58000.00 |
++--------+--------------+---------+----------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT E.emp_id, E.emp_name, E.dept_id, D.dept_name
+    -> FROM EMPLOYEES E, DEPARTMENT D
+    -> WHERE E.dept_id = D.dept_id;
+    
+    
++--------+--------------+---------+-----------+
+| emp_id | emp_name     | dept_id | dept_name |
++--------+--------------+---------+-----------+
+|    101 | John Doe     |       1 | HR        |
+|    102 | Jane Smith   |       1 | HR        |
+|    103 | Mike Johnson |       2 | Finance   |
+|    106 | Sarah Clark  |       2 | Finance   |
+|    104 | Emily Brown  |       3 | IT        |
+|    105 | David Lee    |       3 | IT        |
++--------+--------------+---------+-----------+
+6 rows in set (0.00 sec)
+
+
+## b) Display emp name & dpmt name by implementing a left outer join
+mysql> 
+mysql> 
+mysql> SELECT E.emp_name, D.dept_name
+    -> FROM EMPLOYEES E
+    -> LEFT OUTER JOIN DEPARTMENT D ON E.dept_id = D.dept_id;
++--------------+-----------+
+| emp_name     | dept_name |
++--------------+-----------+
+| John Doe     | HR        |
+| Jane Smith   | HR        |
+| Mike Johnson | Finance   |
+| Emily Brown  | IT        |
+| David Lee    | IT        |
+| Sarah Clark  | Finance   |
++--------------+-----------+
+6 rows in set (0.00 sec)
+
+##c) Display emp name & dpmt name by implementing right outer join
+
+mysql> SELECT E.emp_name, D.dept_name
+    -> FROM EMPLOYEES E
+    -> RIGHT OUTER JOIN DEPARTMENT D ON E.dept_id = D.dept_id;
++--------------+-----------+
+| emp_name     | dept_name |
++--------------+-----------+
+| John Doe     | HR        |
+| Jane Smith   | HR        |
+| Mike Johnson | Finance   |
+| Sarah Clark  | Finance   |
+| Emily Brown  | IT        |
+| David Lee    | IT        |
++--------------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM EMPLOYEES
+    -> WHERE salary > (SELECT AVG(salary) FROM EMPLOYEES);
++--------+--------------+---------+----------+
+| emp_id | emp_name     | dept_id | salary   |
++--------+--------------+---------+----------+
+|    103 | Mike Johnson |       2 | 60000.00 |
+|    104 | Emily Brown  |       3 | 70000.00 |
+|    105 | David Lee    |       3 | 65000.00 |
++--------+--------------+---------+----------+
+3 rows in set (0.08 sec)
+
+
+
